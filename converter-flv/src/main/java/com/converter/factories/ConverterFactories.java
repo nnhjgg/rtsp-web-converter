@@ -10,12 +10,15 @@ import javax.servlet.AsyncContext;
 
 import org.bytedeco.ffmpeg.avcodec.AVPacket;
 import org.bytedeco.ffmpeg.global.avcodec;
+import org.bytedeco.ffmpeg.global.avutil;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FFmpegFrameRecorder;
 
 import com.alibaba.fastjson.util.IOUtils;
 
 import lombok.extern.slf4j.Slf4j;
+
+import static org.bytedeco.ffmpeg.global.avutil.AV_LOG_ERROR;
 
 /**
  * javacv转包装<br/>
@@ -74,6 +77,8 @@ public class ConverterFactories extends Thread implements Converter {
 	@Override
 	public void run() {
 		boolean isCloseGrabberAndResponse = true;
+		//只打印错误日志
+		avutil.av_log_set_level(AV_LOG_ERROR);
 		try {
 			grabber = new FFmpegFrameGrabber(url);
 			if ("rtsp".equals(url.substring(0, 4))) {
